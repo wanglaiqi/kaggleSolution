@@ -4,6 +4,8 @@
 https://github.com/wepe/Kaggle-Solution/blob/master/Digit%20Recognizer/kNN/
 use-sklearn_knn_svm_NB.py
 """
+import sys
+import os
 import numpy as np
 import csv
 
@@ -29,10 +31,13 @@ def nomalizing(array):
 #load  training dataSet
 def loadTrainData():
     l = []
-    with open('train.csv','rb') as file:
+    with open('TrainData.csv','rb') as file:
         lines = csv.reader(file)
-        for line in lines:
-            l.append(line) #42001*785
+        try:
+            for line in lines:
+                l.append(line) #42001*785
+        except csv.Error,e:
+            sys.exit('%s' % (e))
     l.remove(l[0])
     l=np.array(l)
     label=l[:,0]
@@ -42,13 +47,15 @@ def loadTrainData():
 #load the testing data
 def loadTestData():
     l = []
-    with open('test.csv','rb') as file:
+    with open('TestData.csv','rb') as file:
         lines = csv.reader(file)
         for line in lines:
             l.append(line) #28001 * 784
     l.remove(l[0])
-    data = np.array(l)
-    return nomalizing(toInt(data))
+    l = np.array(l)
+    label=l[:,0]
+    data=l[:,1:]
+    return nomalizing(toInt(data)),toInt(label)
 
 #save the predict result
 def saveResult(result,csvName):
@@ -124,8 +131,8 @@ def digitRecognition():
     
 def handWritingClass():
     trainData,trainLabel = loadTrainData()
-    testData = loadTestData()
-    testLabel = loadTestResult()
+    testData,testLabel = loadTestData()
+    #testLabel = loadTestResult()
     m,n = np.shape(testData)
     errorCount = 0
     resultList = []
@@ -134,7 +141,7 @@ def handWritingClass():
         resultList.append(classifierResult)
         print "the classifier came back with: %d, the real answer is: %d" % (classifierResult, testLabel[0,i])
         if(classifierResult!=testLabel[0,i]):
-            errorCOunt+=1.0
+            errorCount+=1.0
     print "\nthe total number of errors is: %d" % errorCount
     print "\nthe total error rate is: %f" % (errorCount/float(m))
     
