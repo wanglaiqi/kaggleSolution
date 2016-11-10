@@ -49,12 +49,12 @@ def HandingWritingRecognition():
     image_test_data = pd.read_csv("D:/kaggleCompetition/HandWritingRecognition/test.csv")
     #get the train data and the test data
     image_train_X = image_train_data.iloc[:,1:]
-    image_train_y = image_train_data.iloc[:,1]
+    image_train_y = image_train_data.iloc[:,0]
     image_test_X = image_test_data.iloc[:,:]
     #transfer the data from string to int
-    #image_train_X = toInt(image_train_X)
+    image_train_X = toInt(image_train_X)
     #image_train_y = toInt(image_train_y)
-    #image_test_X = toInt(image_test_X)
+    image_test_X = toInt(image_test_X)
     #normalizing the data
     image_train_norm_X = NormalizingData(image_train_X)
     image_test_norm_X = NormalizingData(image_test_X)
